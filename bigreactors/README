@@ -1,0 +1,94 @@
+Steps how to install and setup are below.
+
+Source: https://tenyx.de/brgc/
+Forum & explanation: https://oc.cil.li/topic/918-big-reactors-grid-control/
+
+= FEATURES =
+
+= Active and Passive Reactor support
+    Active and passive reactors are supported as well as turbines.
+
+= Multi-Reactor/-Turbine support
+    This program allows you to control multiple reactors and turbines at once. You no longer need multiple computers and screens for your large reactor setup. One computer, one screen!
+
+= Inhomogenous Grid support
+    You can connect any number of active reactors, passive reactors and turbines to the same controller. It just works.
+
+= Plug&Play
+    The controller is fully autonomous and automatically configures, calibrates and estimates optimal values for a reactor or a turbine once it is connected. Just plug it in and you're good.
+
+= Multi-Purpose usage of Active Reactors
+    Do you just need a lot of steam for something? Just hook it up to an active reactor controlled by this controller. The controller will automatically regulate the reactors output so you don't run out of steam.
+
+= PD regulation
+    In addition to the old turn reactor on/off method, this controller uses a pd regulator to drive reactors and turbines as efficiently as possible while saturating your energy grid.
+
+= Deamon
+    Deploy multiple services on the same machine, as the controller itself is a background process and won't block the entire system.
+
+= Headless support
+    If you never look at controller screens, you can just remove it once you set up the controller. No screens required.
+
+= Scalable UI
+    You like BIG screens? Or maybe ultra wide screens? No problem! The UI scales to fit any screen size you may want.
+
+
+= HOW TO INSTALL =
+
+  = From MMaster github repo
+
+    Clone the github repo and copy /usr and /etc to your OC system.
+
+  = From original source using installer:
+
+    You'll need a computer with an Internet Card to download Big Reactors Grid Control. Once you've got your computer up and running, run
+    
+    wget http://xypm.tenyx.de/standalone/brgc_installer.lua
+    
+    and execute
+    
+    brgc_installer
+    
+    If you're upgrading from a previous version, you will need to restart your (in-game) computer now.
+    That's it.
+
+
+= HOW TO SETUP =
+
+    To start the controller you'll have to do:
+    
+        rc brgc_reactor start
+        rc brgc_turbine start
+        rc brgc_grid start
+    
+    Alternatively you can do a simple:
+    
+    brgcctrl service all start
+    
+    Don't forget to add brgc_reactor, brgc_turbine and brgc_grid to your /etc/rc.cfg if you want to start the controller at boot time: 
+
+        enabled = { "brgc_reactor", "brgc_turbine", "brgc_grid" }
+    
+    To do so without editing any files, you may use the following commands:
+    
+    rc brgc_reactor enable
+    rc brgc_turbine enable
+    rc brgc_grid enable
+    
+    You can now connect your reactors and turbines to the computer. If you want to start the gui, simply run
+    
+    brgc_gui
+    
+    To use the grid functionality, connect energy storage blocks to your computer using Adapters. Currently EnderIO Capacitors (requires the mod Computronics), Draconic Evolution Energy Storage and RFTools Power Cells are supported.
+    
+    Note: If you're going to use turbines, also using the grid controller is strongly recommended.
+    Note: If you don't intend to use turbines, you can omit starting
+    
+    brgc_turbine
+    
+    Note: If you don't want to use the grid controller, you can omit starting
+    
+    brgc_grid
+    
+    Note: The controller assumes all active reactors to output steam to the same steam network.
+    Note: The controller assumes all turbines to output energy to the same energy grid. 

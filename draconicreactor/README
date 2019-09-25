@@ -1,0 +1,102 @@
+Source: https://tenyx.de/draconic_control/
+
+= How to setup =
+    First things first you need to build a draconic reactor. For energy transfer you'll need a way to transfer huge amounts of energy and exactly two (!) Flux Gates from Draconic Evolution. In this guide we'll be using Energy Crystals from Draconic Evolution. Any tier should do, really.
+    You'll also need an energy storage that is capable of holding at least 800 million RF and is capable of outputting at least 200kRF/t.
+
+= Reactor Output
+    Connect any Reactor Stabilizer to the input of a Flux Gate and connect the Flux Gates output to some kind of energy storage. You can identify the Flux Gates input/output by the arraw that's drawn on it: It points from the input side to the output side. Now hook up the Flux Gate to your control computer by using an Adapter. Remember the Flux Gates address for configuring the controller later.
+
+= Reactor Shield Input
+    Connect your energy storage to the input of a Flux Gate and connect the output of the Flux Gate to the Reactor Energy Injector. Connect the Flux Gate to the computer the same way you did with the previous one. Hook up that Flux Gate to the control computer by using an Adapter. Remember the Flux Gates address for configuring the controller later.
+
+= Emergency Energy Feed (Optional)
+    You may want to include a way to feed energy into your reactor in case you suddenly have to turn it off or the controller breaks. There are two ways to do this:
+
+    Use a second Reactor Energy Injector and connect it to an energy source. Make sure to keep this connection disabled at all times and only enable it in case of an emergency. Keep in mind though, that if you ever need it, you'll need it fast. Limit the energy flow to roughly 200kRF/t.
+    Use a modified version of the proposed layout where you can bypass the Shield input circuits Flux Gate and inject energy this way. Limit the energy flow to roughly 200kRF/t. Note that if you intend to do this by putting Energy Crystals you SHOULD use the basic versions. Energy Crystals withhold a certain amount of RF/t until their interal storage has accumulated roughly 20% stored RF. This behaviour causes the containment field to be underfed and consequently fail after a while. Since the basic versions only have a small internal buffer, this behaviour will not cause any problems.
+
+    Whatever method you use, make sure you do not allow infinite energy transfer from Reactor Stabilizers to the Reactor Energy Injector. If you do, you'll soon have a nice big hole in your world. It is recommended that you use a seperate energy storage that has a spare 1 billion RF dedicated to the reactors emergency shutdown only. Alternatively, providing roughly 200kRF/t through other means will work just fine.
+
+
+
+Now that your energy circuits are all wired up connect the actual reactor to the control computer. Just use an Adapter as you did with the Flux Gates.
+
+OpenComputers: Setting up the controller
+The OpenComputers controller consists of multiple libraries and programs:
+
+    The library, which contains the controller itself.
+    The actual program, which instructs the library to start, stop, shutdown, etc...
+    The gui is a dedicated program which interacts with the controller library.
+    The oop.lua library, which is one of my helper libs.
+    The libGUI library, which is my gui abstraction library.
+
+All files can be found here.
+The controller doesn't need a max tier CPU or a lot of RAM, but you may require an Internet Card in order to download the neccessary files. Keep that in mind when building your computer. However at this point you should have no trouble making a max tier computer anyways. If you really want to stick to the minimum, you can use a T1 CPU and 1x T1.5 or 2x T1 RAM. If you intend to control more than one reactor with one computer, keep in mind that you might end up needing 2x T1.5 RAM. If you intend to use the gui, make sure you're using at least T2 CPU, RAM and GPU.
+Now that you have your computer ready, download the installer with:
+
+wget http://xypm.tenyx.de/standalone/dc_installer.lua
+
+Now run it with
+
+dc_installer
+
+.
+
+Next you'll need to create a configuration file for the program. Open /etc/draconic_control.cfg with the editor. You can copypasta this configuration:
+
+reactors = {
+    {
+        reactorAddress = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+        fluxGateDrainbackAddress = "YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY",
+        fluxGateOutputAddress = "ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ"
+    }
+}
+                    
+
+Make sure to input the correct addresses and save the file. More advanced configurations can be found here.
+If you're upgrading from an earlier version of the controller, you have to restart the computer.
+You can now start the controller with
+
+draconic_control start
+
+or
+
+rc draconic_control start
+
+and you're ready to go. If you want to automatically start the controller at system boot, make sure to add
+
+"draconic_control"
+
+to "enabled" in your
+
+/etc/rc.cfg
+
+file.
+Note: This will only start the controller, not the gui.
+To start up the gui use
+
+dc_gui
+
+. To terminate it, hit the title at the top of the screen. The OC gui adjusts to any screen size above and will hide information if the screen ratio does not allow for them being fit on screen. I recommend a 5x4 or 4x4 screen if you like big screens or a 2x2 screen if you prefer smaller displays. Even a 1x1 screen will do but you (propably) won't actually be able to read anything on it unless you open the screens gui.
+Before you activate the reactor:
+Please keep in mind, that during the initial phase of the reactor, you can barely keep up the reactors shields and you propably need to provide some more energy to it. Do NOT extract any energy from your energy storage until the reactor is outputting well more energy than it requires to keep up the shield. Also try to always keep at least 800 million RF in your energy storage so you can always guarantee a safe reactor shutdown.
+The final step: Acticating the reactor
+After you've set up everything up you'll have to manually charge the reactor. The controller will not automatically ignite the reaction, you've got the honors to do so ;).
+As soon as the reactor goes online, the controller will take over.
+You can set "autostart = true" for each reactor individually to have the controller ignite the reaction as soon as the reactor has finished charging.
+Note that once the reactor has started, you can not simply shut it down without prior preparation. Read here for further information.
+The default settings
+If you do not intend to tweak anything, these values may be of interes to you:
+The default settings will yield 2.34325 TRF over the course of 12 days, 4 hours and 15 minutes at 1.11359 MRF/t average.
+It takes 9 hours and 12 minutes (real time) for the reactor to shut down completely (already included in the total runtime).
+
+If you want to get more out of your reactor (which is entirely possible), you may want to check out the chapter on tweaking and have a look at the presets section. If you decide to tweak on your own, give the simulator a try.
+Emergency shutdown
+In case something goes wrong and you suspect the controller to drive your reactor critical, first make sure energy is still flowing back into the reactor. If this is the case make sure you can provide 200kRF/t for an extended amount of time to the reactor and disconnect the output power circuit. Shut down the reactor now.
+If energy is not flowing back into the reactor enable your emergency energy feed and shut down your reactor. Fingers crossed.
+
+
+To sum everything up: You really really want an emergency energy feed. If you cheap out on that, chances to recover your reactor/base/world/universe are slim.
+Even if you go with the "I'm feeling lucky"-route, in most cases you won't have time for that. Go grab whatever you can and get the hell outta there - although you most likely won't be able to do that either.
+May the odds be ever in your favour. 

@@ -15,6 +15,7 @@ local energy_storage_component = {
 		["draconic_rf_storage"] = 1,
 		["rftools_powercell"] = 1,
 		["energy_device"] = 1,
+		["br_reactor"] = 1,
 		["induction_matrix"] = 0.4
 	}
 }
@@ -33,8 +34,14 @@ function energy_storage_component:construct(address)
 	if self.mComponent and self.mComponent.getEnergy then
 		self.mComponent.getEnergyStored = self.mComponent.getEnergy
 	end
+	if self.mComponent and self.mComponent.getEnergyStored then
+		self.mComponent.getEnergyStored = self.mComponent.getEnergyStored
+	end
 	if self.mComponent and self.mComponent.getMaxEnergy then
 		self.mComponent.getMaxEnergyStored = self.mComponent.getMaxEnergy
+	end
+	if self.mComponent and self.mComponent.getEnergyCapacity then
+		self.mComponent.getMaxEnergyStored = self.mComponent.getEnergyCapacity
 	end
 
 	if self.mComponent and self.mComponent.getEnergyStored and self.mComponent.getMaxEnergyStored then

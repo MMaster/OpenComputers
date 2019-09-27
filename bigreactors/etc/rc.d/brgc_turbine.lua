@@ -1,39 +1,23 @@
 --[[
-Init script for Big Reactors Grid Control - Turbine Controller for OpenComputers by XyFreak
+Init script for Big Reactors Grid Control - Turbine Controller for OpenComputers by MMaster
 Website: http://tenyx.de/brgc/
 --]]
-
-local turbine_ctrl = require("brgc/turbine_ctrl")
+local shell = require("shell")
+local service = "turbine"
 
 function start()
-	if turbine_ctrl.isRunning() then
-		io.stderr:write("Big Reactors Grid Control - Turbine Controller service already running.")
-	else
-		turbine_ctrl.discover()
-		turbine_ctrl.start()
-	end
+    shell.execute("/usr/bin/brgcctrl service " .. service .. " start")
 end
 
 function stop()
-	if not turbine_ctrl.isRunning() then
-		io.stderr:write("Big Reactors Grid Control - Turbine Controller service not running.")
-	else
-		turbine_ctrl.stop()
-	end
+    shell.execute("/usr/bin/brgcctrl service " .. service .. " stop")
 end
 
 function restart()
-	turbine_ctrl.reset()
-	turbine_ctrl.discover()
-	if not turbine_ctrl.isRunning() then
-		turbine_ctrl.start()
-	end
+    shell.execute("/usr/bin/brgcctrl service " .. service .. " restart")
 end
 
 function status()
-	if turbine_ctrl.isRunning() then
-		io.write("Big Reactors Grid Control - Turbine Controller is running.")
-	else
-		io.write("Big Reactors Grid Control - Turbine Controller is not running.")
-	end
+    shell.execute("/usr/bin/brgcctrl service " .. service .. " status")
 end
+

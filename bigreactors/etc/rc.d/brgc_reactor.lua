@@ -1,39 +1,22 @@
 --[[
-Init script for Big Reactors Grid Control - Reactor Controller for OpenComputers by XyFreak
+Init script for Big Reactors Grid Control - Reactor Controller for OpenComputers by MMaster
 Website: http://tenyx.de/brgc/
 --]]
-
-local reactor_ctrl = require("brgc/reactor_ctrl")
+local shell = require("shell")
+local service = "reactor"
 
 function start()
-	if reactor_ctrl.isRunning() then
-		io.stderr:write("Big Reactors Grid Control - Reactor Controller service already running.")
-	else
-		reactor_ctrl.discover()
-		reactor_ctrl.start()
-	end
+    shell.execute("/usr/bin/brgcctrl service " .. service .. " start")
 end
 
 function stop()
-	if not reactor_ctrl.isRunning() then
-		io.stderr:write("Big Reactors Grid Control - Reactor Controller service not running.")
-	else
-		reactor_ctrl.stop()
-	end
+    shell.execute("/usr/bin/brgcctrl service " .. service .. " stop")
 end
 
 function restart()
-	reactor_ctrl.reset()
-	reactor_ctrl.discover()
-	if not reactor_ctrl.isRunning() then
-		reactor_ctrl.start()
-	end
+    shell.execute("/usr/bin/brgcctrl service " .. service .. " restart")
 end
 
 function status()
-	if reactor_ctrl.isRunning() then
-		io.write("Big Reactors Grid Control - Reactor Controller is running.")
-	else
-		io.write("Big Reactors Grid Control - Reactor Controller is not running.")
-	end
+    shell.execute("/usr/bin/brgcctrl service " .. service .. " status")
 end

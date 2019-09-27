@@ -29,24 +29,20 @@ function energy_storage_component:construct(address)
 
 	if self.mComponent then
 		self.mEnergyTransformFactor = energy_storage_component.mCompatibleComponents[self.mComponent.type] or 1
+        if self.mComponent.getEnergyCapacity then
+            self.mComponent.getMaxEnergyStored = self.mComponent.getEnergyCapacity
+        else
+            if self.mComponent.getEnergy then
+                self.mComponent.getEnergyStored = self.mComponent.getEnergy
+            end
+            if self.mComponent.getMaxEnergy then
+                self.mComponent.getMaxEnergyStored = self.mComponent.getMaxEnergy
+            end
+        end
 	end
 
-	if self.mComponent and self.mComponent.getEnergy then
-		self.mComponent.getEnergyStored = self.mComponent.getEnergy
-	end
-	if self.mComponent and self.mComponent.getEnergyStored then
-		self.mComponent.getEnergyStored = self.mComponent.getEnergyStored
-	end
-	if self.mComponent and self.mComponent.getMaxEnergy then
-		self.mComponent.getMaxEnergyStored = self.mComponent.getMaxEnergy
-	end
-	if self.mComponent and self.mComponent.getEnergyCapacity then
-		self.mComponent.getMaxEnergyStored = self.mComponent.getEnergyCapacity
-	end
 
-	if self.mComponent and self.mComponent.getEnergyStored and self.mComponent.getMaxEnergyStored then
-		-- The component supports storing energy
-	else
+	if not self.mComponent or not self.mComponent.getEnergyStored or not self.mComponent.getMaxEnergyStored then
 		self.mComponent = nil
 	end
 end

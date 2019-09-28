@@ -18,36 +18,6 @@ local valueColor = 0xAE81FF
 local builtinColor = 0x66D9EF
 local lineNrColor = 0x90908A
 
---[[local keywords = {
-    ["and"] = true,
-    ["break"] = true,
-    ["do"] = true,
-    ["else"] = true,
-    ["elseif"] = true,
-    ["end"] = true,
-    ["false"] = true,
-    ["for"] = true,
-    ["function"] = true,
-    ["if"] = true,
-    ["in"] = true,
-    ["local"] = true,
-    ["nil"] = true,
-    ["not"] = true,
-    ["or"] = true,
-    ["repeat"] = true,
-    ["return"] = true,
-    ["then"] = true,
-    ["true"] = true,
-    ["until"] = true,
-    ["while"] = true,
-
-    ["+"] = true,
-    ["-"] = true,
-    ["*"] = true,
-    ["/"] = true,
-    ["="] = true
-}]]
-
 local keywords = {
     ['break'] = true,
     ['do'] = true,
@@ -434,7 +404,7 @@ local function drawLine(x, y, w, h, lineNr)
         end
 
         gpu.setBackground(lineBg)
-        gpu.fill(1, y - 1 + lineNr - scrollY, 7, 1, ' ')
+        gpu.fill(x - currentMargin, y - 1 + lineNr - scrollY, currentMargin, 1, ' ')
         gpu.fill(x, drawY, w + currentMargin, 1, ' ')
 
         if lineNr <= #buffer then
@@ -459,8 +429,8 @@ local function drawLine(x, y, w, h, lineNr)
             local currentColor = gpu.setForeground(lineNrColor)
             local number = tostring(math.floor(lineNr))
 
-            gpu.fill(1, y - 1 + lineNr - scrollY, 7, 1, ' ') -- again
-            gpu.set(2 + (5 - number:len()), y - 1 + lineNr - scrollY, number)
+            gpu.fill(x - currentMargin, y - 1 + lineNr - scrollY, currentMargin, 1, ' ') -- again
+            gpu.set(x - number:len(), y - 1 + lineNr - scrollY, number)
             gpu.setForeground(currentColor)
             gpu.setBackground(bgColor)
         end

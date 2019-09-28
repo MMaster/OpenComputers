@@ -10,6 +10,22 @@ local version = "0.2" .. " (MMGUI Lib " .. gui.Version() .. ")"
 
 local screenWidth, screenHeight = gpu.getResolution()
 
+-- pad the left side
+lpad =
+    function (s, l, c)
+        local res = srep(c or ' ', l - #s) .. s
+
+        return res, res ~= s
+    end
+
+-- pad the right side
+rpad =
+    function (s, l, c)
+        local res = s .. srep(c or ' ', l - #s)
+
+        return res, res ~= s
+    end
+
 -- main panel
 local panel
 
@@ -31,13 +47,12 @@ local reactorUpdateWait = 2.0
 -- reactor grid controller - initialized by background service brgc (part of bigreactors script)
 local grid_controller = require("brgc/grid_controller")
 
-
 local lastEnergyProducedReactors = -1
-function updateReactorPowerGen(cur)
+function updateReactorPowerGen(cur, max)
     if lastEnergyProducedReactors == cur then
         return false
     end
-    gui.setText(panel, lblReactorPowerGen, string.format("%*.1f / %*.1f", reactorTwoValueWidth, reactorTwoValueWidth, cur))
+    gui.setText(panel, lblReactorPowerGen, rpad(string.format("%.1f", cur), reactorTwoValueWidth, ' ') .. " / " .. string.format("%.1f", max))
     lastEnergyProducedReactors = cur
 end
 
@@ -48,9 +63,9 @@ function updateReactors()
 
     if grid_controller.isRunning() then
         local energyProducedReactors = grid_controller.getEnergyProductionRateReactors()
-        updateReactorPowerGen(energyProducedReactors)
+        updateReactorPowerGen(energyProducedReactors, 0)
     else
-        updateReactorPowerGen(0)
+        updateReactorPowerGen(0,0)
     end
 end
 

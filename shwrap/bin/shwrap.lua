@@ -34,11 +34,6 @@ local panel
 -- REACTORS BEGIN
 --
 
-local reactorPanel
-
--- reactor labels
-local lblReactorGen
-
 -- cache
 local reactorValueWidth = 17
 local reactorTwoValueWidth = 7
@@ -80,6 +75,9 @@ function updateReactors()
         updateLblValueFloat(lblReactorGenOpt,   energyProductionReactorOpt)
         updateLblValueFloat(lblReactorGenMax,   energyProductionReactorsMax)
 
+        gui.setMax(panel, pbReactorOutput, energyProductionReactorsMax)
+        gui.setValue(panel, pbReactorOutput, energyProducedReactors)
+
         updateLblValueFloat(lblReactorNeed,     grid_controller.getEnergyExtractionRate())
         updateLblValueFloat(lblReactorNeedAvg,  grid_controller.getEnergyExtractionRateWeighted())
 
@@ -90,29 +88,33 @@ function updateReactors()
     end
 end
 
+local colorLabelFg = 0x90908A
+local colorValueFg = 0x66D9EF
+
 function setupLabelsValue(x, y, w, h, name, unit)
-    gui.newLabel(panel, x + 1, y, name)
-    local lblValue = gui.newLabel(panel, x + 11, y, "")
-    gui.newLabel(panel, x + w - 5, y, unit)
+    gui.newLabel(panel, x + 1, y, name, nil, colorLabelFg)
+    local lblValue = gui.newLabel(panel, x + 11, y, "", nil, colorValueFg)
+    gui.newLabel(panel, x + w - 5, y, unit, nil, colorValueFg)
     return lblValue
 end
 
 function setupReactors()
-    local x, y, w, h = 2, 1, panel.width - 3, 10
+    local x, y, w, h = 2, 1, panel.width - 3, 13
     reactorPanel = gui.newFrame(panel, x - 1, y - 1, w + 2, h + 2, "Reactors")
 
     reactorValueWidth = w - 6 - 11
     reactorTwoValueWidth = (reactorValueWidth - 3) // 2
 
     lblReactorGen =        setupLabelsValue(x, y + 0, w, h, "Cur Output", "RF/t")
-    lblReactorGenOpt =     setupLabelsValue(x, y + 1, w, h, "Opt Output", "RF/t")
-    lblReactorGenMax =     setupLabelsValue(x, y + 2, w, h, "Max Output", "RF/t")
+    lblReactorGenMax =     setupLabelsValue(x, y + 1, w, h, "Max Output", "RF/t")
+    lblReactorGenOpt =     setupLabelsValue(x, y + 2, w, h, "Opt Output", "RF/t")
+    pbReactorOutput = gui.newProgress(panel, x + 1, y + 3, w, 100.0, 0.0, nil, 1)
 
     lblReactorNeed =       setupLabelsValue(x, y + 5, w, h, "Cur Need",   "RF/t")
     lblReactorNeedAvg =    setupLabelsValue(x, y + 6, w, h, "Avg Need",   "RF/t")
 
-    lblReactorStored =     setupLabelsValue(x, y + 8, w, h, "Cur Stored", "RF")
-    lblReactorStoredMax =  setupLabelsValue(x, y + 9, w, h, "Max Stored", "RF")
+    lblReactorStored =     setupLabelsValue(x, y + 9, w, h, "Cur Stored", "RF")
+    lblReactorStoredMax =  setupLabelsValue(x, y +10, w, h, "Max Stored", "RF")
 end
 
 --

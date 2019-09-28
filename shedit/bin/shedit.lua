@@ -418,6 +418,10 @@ local function drawLine(x, y, w, h, lineNr)
                 local color = data[2]
                 local bg = data[3]
                 local drawAt = i - scrollX + x
+
+                if drawAt > w - x then
+                    break
+                end
                 
                 if drawAt < x then
                     text = string.sub(text, x - drawAt + 1)

@@ -405,7 +405,7 @@ local function drawLine(x, y, w, h, lineNr)
 
         gpu.setBackground(lineBg)
         gpu.fill(x - currentMargin, y - 1 + lineNr - scrollY, currentMargin, 1, ' ')
-        gpu.fill(x, drawY, w + currentMargin, 1, ' ')
+        gpu.fill(x, drawY, w, 1, ' ')
 
         if lineNr <= #buffer then
             for l = 1, #colors do
@@ -414,8 +414,17 @@ local function drawLine(x, y, w, h, lineNr)
                 local color = data[2]
                 local bg = data[3]
                 local drawAt = i - scrollX + x
+                
+                if drawAt < x then
+                    text = string.sub(text, x - drawAt)
+                    drawAt = x
+                end
 
-                if drawAt + text:len() > 0 then
+                if drawAt + text:len() > w then
+                    text = string.sub(text, 0, (w - (drawAt - x)))
+                end
+
+                if drawAt + text:len() > x - 1 then
                     local currentColor = gpu.setForeground(color)
                     local currentBg = gpu.setBackground(bg or lineBg)
                     gpu.set(drawAt, drawY, text)

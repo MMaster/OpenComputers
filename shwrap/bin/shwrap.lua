@@ -38,6 +38,7 @@ function updateReactorPowerGen(cur)
         return false
     end
     gui.setText(panel, lblReactorPowerGen, string.format("%*.1f / %*.1f", reactorTwoValueWidth, reactorTwoValueWidth, cur))
+    lastEnergyProducedReactors = cur
 end
 
 function updateReactors()

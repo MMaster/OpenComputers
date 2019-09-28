@@ -148,21 +148,23 @@ function buttonExitCallback(guiID, id)
     gui.displayGui(guiID)
 end
 
+-- run thread loop
 function guiThread()
-    -- initial gui creation and screen setup
-    panel = gui.newGui(screenWidth - 36, 2, 37, screenHeight - 2, false, nil, 0x141512, 0xa0a0a0)
-    buttonExit = gui.newButton(panel, panel.width - 2, -1, "X", buttonExitCallback, 0x201010, 0xff2222)
-
-    setupPanel()
-
-    gui.clearScreen()
-    gui.setTop(prgName .. " " .. version)
-
     while true do
         guiTick()
         gui.runGui(panel)
     end
 end
+
+-- initial gui creation and screen setup
+panel = gui.newGui(screenWidth - 36, 2, 37, screenHeight - 2, false, nil, 0x141512, 0xa0a0a0)
+buttonExit = gui.newButton(panel, panel.width - 2, -1, "X", buttonExitCallback, 0x201010, 0xff2222)
+
+setupPanel()
+
+-- clear screen and set top message
+gui.clearScreen()
+gui.setTop(prgName .. " " .. version)
 
 -- detach thread
 local detached_thread = thread.create(guiThread):detach()

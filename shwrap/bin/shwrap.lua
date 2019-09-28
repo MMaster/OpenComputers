@@ -7,12 +7,14 @@ local gui = require("mmgui")
 local prgName = "shwrap"
 local version = "0.1" .. " (MMGUI Lib " .. gui.Version() .. ")"
 
+local guiPanel
+
 function buttonExitCallback(guiID, id)
   local result = gui.getYesNo("", "Do you really want to exit?", "")
   if result == true then
     gui.exit()
   end
-  gui.displayGui(myGui)
+  gui.displayGui(guiPanel)
 end
 
 local screenWidth, screenHeight = gpu.getResolution()
@@ -24,6 +26,16 @@ buttonExit = gui.newButton(guiPanel, guiPanel.width - 1, 0, "X", buttonExitCallb
 gui.clearScreen()
 gui.setTop(prgName .. " " .. version)
 
-while true do
-  gui.runGui(guiPanel)
+function guiThread()
+  while true do
+      gui.runGui(guiPanel)
+  end
 end
+
+local detached_thread = thread.create(guiThread):detach()
+
+term.window.width = screenWidth - 37
+term.window.height = screenHeight - 1
+term.window.dx = 0
+term.window.dy = 2
+

@@ -457,7 +457,7 @@ local function _displayProgress(guiID, progressID)
     gpu.setForeground(guiID.fg)
     if guiID[progressID].displayNumber == true then
       -- gpu.fill(x, guiID[progressID].y - 1, guiID[progressID].lenght, 1, " ")
-      gpu.set(x + guiID[progressID].lenght - #proz - 1, guiID[progressID].y, proz .. "%")
+      gpu.set(x + guiID[progressID].lenght - #("" .. proz) - 1, guiID[progressID].y, proz .. "%")
     end
   end
 end

@@ -13,11 +13,15 @@ local units = {
 	{1e18, "Ex"}
 }
 
+local prec_mult = {
+    1, 10, 100, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9
+}
+
 function stringutils.formatNumber(number, unit, padding, precision)
 	local last_div = 1
 	local last_prefix = ""
 	for _, v in pairs(units) do
-		if math.abs(number) < v[1] then
+		if math.abs(number) < v[1] * prec_mult[precision+1] then
 			break
 		end
 		last_div = v[1]

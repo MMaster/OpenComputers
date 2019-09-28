@@ -7,7 +7,7 @@ local thread = require("thread")
 local stringutils = require("stringutils")
 
 local prgName = "shwrap"
-local version = "0.3" .. " (MMGUI Lib " .. gui.Version() .. ") by MMaster"
+local version = "0.4" .. " (MMGUI Lib " .. gui.Version() .. ") by MMaster"
 
 local screenWidth, screenHeight = gpu.getResolution()
 
@@ -51,7 +51,7 @@ function updateLblValueFloat(lbl, cur)
         return false
     end
 
-    gui.setText(panel, lbl, lpad(stringutils.formatNumber(cur, "", 2), reactorValueWidth, ' '))
+    gui.setText(panel, lbl, lpad(stringutils.formatNumber(cur, "", false, 2), reactorValueWidth, ' '))
     lastValues[lbl] = cur
 end
 

@@ -24,15 +24,15 @@ local reactorPanel
 local lblReactorPowerGen
 
 -- cache
-local reactorValueWidth
-local reactorTwoValueWidth
+local reactorValueWidth = 17
+local reactorTwoValueWidth = 6
 local reactorsUpdateTimer
 
 -- reactor grid controller - initialized by background service brgc (part of bigreactors script)
 local grid_controller = require("brgc/grid_controller")
 
 
-local lastEnergyProducedReactors
+local lastEnergyProducedReactors = -1
 function updateReactorPowerGen(cur)
     if lastEnergyProducedReactors == cur then
         return false
@@ -49,11 +49,13 @@ function updateReactors()
     if grid_controller.isRunning() then
         local energyProducedReactors = grid_controller.getEnergyProductionRateReactors()
         updateReactorPowerGen(energyProducedReactors)
+    else
+        updateReactorPowerGen(0)
     end
 end
 
 function setupReactors()
-    local x, y, w, h = 2, 2, panel.width - 3, 8
+    local x, y, w, h = 2, 1, panel.width - 3, 8
     reactorPanel = gui.newFrame(panel, x - 1, y - 1, w + 2, h + 2, "Reactors")
 
     -- line #1
@@ -85,21 +87,22 @@ end
 function buttonExitCallback(guiID, id)
     local result = gui.getYesNo("", "Do you really want to exit?", "")
     if result == true then
+        event.cancel(reactorsUpdateTimer)
         gui.exit()
     end
     gui.displayGui(guiID)
 end
 
--- initial gui creation and screen setup
-panel = gui.newGui(screenWidth - 36, 2, 37, screenHeight - 2, false, nil, 0x141512, 0xa0a0a0)
-buttonExit = gui.newButton(panel, panel.width - 2, 0, "X", buttonExitCallback, 0x201010, 0xff2222)
-
-setupPanel(panel)
-
-gui.clearScreen()
-gui.setTop(prgName .. " " .. version)
-
 function guiThread()
+    -- initial gui creation and screen setup
+    panel = gui.newGui(screenWidth - 36, 2, 37, screenHeight - 2, false, nil, 0x141512, 0xa0a0a0)
+    buttonExit = gui.newButton(panel, panel.width - 2, -1, "X", buttonExitCallback, 0x201010, 0xff2222)
+
+    setupPanel()
+
+    gui.clearScreen()
+    gui.setTop(prgName .. " " .. version)
+
     while true do
         gui.runGui(panel)
     end

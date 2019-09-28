@@ -408,7 +408,7 @@ local function drawLine(x, y, w, h, lineNr)
         end
 
         gpu.setBackground(lineBg)
-        gpu.fill(x - currentMargin, y - 1 + lineNr - scrollY, currentMargin, 1, ' ')
+        --gpu.fill(x - currentMargin, y - 1 + lineNr - scrollY, currentMargin, 1, ' ')
         gpu.fill(x, drawY, w, 1, ' ')
 
         if lineNr <= #buffer then

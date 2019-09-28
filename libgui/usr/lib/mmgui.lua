@@ -1,5 +1,5 @@
 local versionMajor = "2"
-local versionMinor = "1"
+local versionMinor = "2"
 
 --[[
     Original by Dustpuppy
@@ -133,6 +133,23 @@ gui.getRadio(guiID)
 gui.runGui(guiID)
   needs to be called in a loop to run gui actions
   it's possible to setup guis and run each seperated.
+
+gui.processEvent(guiID, isAuthorizedFunc, e, x, y, button, player)
+  processes event collected somewhere else
+  runGui uses it like this:
+
+  function gui.runGui(guiID, isAuthorizedFunc)
+    if displayed == false then
+      displayed = true
+      gui.displayGui(guiID)
+    end
+    local e, _, x, y, button, player = event.pull(0.1, "touch")
+    if e == nil then
+      return false
+    end
+    gui.processEvent(guiID, isAuthorizedFunc, e, x, y, button, player)
+  end
+
 
 gui.showError(msg1, msg2, msg3)
   displays a centered error message, with exit program as button
@@ -1009,11 +1026,18 @@ function gui.runGui(guiID, isAuthorizedFunc)
     displayed = true
     gui.displayGui(guiID)
   end
-  local ix = 0
   local e, _, x, y, button, player = event.pull(0.1, "touch")
   if e == nil then
     return false
   end
+  gui.processEvent(guiID, isAuthorizedFunc, e, x, y, button, player)
+end
+
+function gui.processEvent(guiID, isAuthorizedFunc, e, x, y, button, player)
+  if e == nil or e ~= "touch" then
+    return false
+  end
+  local ix = 0
   if isAuthorizedFunc and not isAuthorizedFunc(guiID, player) then
     gui.log("touches.log", "Not authorized: " .. player)
 

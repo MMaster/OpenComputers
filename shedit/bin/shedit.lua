@@ -17,6 +17,7 @@ local stringColor = 0xE6DB74
 local valueColor = 0xAE81FF
 local builtinColor = 0x66D9EF
 local lineNrColor = 0x90908A
+local lineNrBgColor = 0x131411
 
 local keywords = {
     ['break'] = true,
@@ -416,15 +417,15 @@ local function drawLine(x, y, w, h, lineNr)
                 local drawAt = i - scrollX + x
                 
                 if drawAt < x then
-                    text = string.sub(text, x - drawAt)
+                    text = string.sub(text, x - drawAt + 1)
                     drawAt = x
                 end
 
-                if drawAt + text:len() > w then
-                    text = string.sub(text, 0, (w - (drawAt - x)))
+                if drawAt + text:len() > w + x then
+                    text = string.sub(text, 1, (w - (drawAt - x)))
                 end
 
-                if drawAt + text:len() > x - 1 then
+                if text:len() > 0 then
                     local currentColor = gpu.setForeground(color)
                     local currentBg = gpu.setBackground(bg or lineBg)
                     gpu.set(drawAt, drawY, text)
@@ -432,16 +433,17 @@ local function drawLine(x, y, w, h, lineNr)
                     gpu.setBackground(currentBg)
                 end
 
-                i = i + text:len()
+                i = i + data[1]:len()
             end
 
             local currentColor = gpu.setForeground(lineNrColor)
+            local currentBgColor = gpu.setBackground(lineNrBgColor)
             local number = tostring(math.floor(lineNr))
 
             gpu.fill(x - currentMargin, y - 1 + lineNr - scrollY, currentMargin, 1, ' ') -- again
-            gpu.set(x - number:len(), y - 1 + lineNr - scrollY, number)
+            gpu.set(x - number:len() - 1, y - 1 + lineNr - scrollY, number)
             gpu.setForeground(currentColor)
-            gpu.setBackground(bgColor)
+            gpu.setBackground(currentBgColor)
         end
     end
 end

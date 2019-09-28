@@ -268,7 +268,10 @@ local function setStatus(value)
     local x, y, w, h = term.getGlobalArea()
     value = unicode.wlen(value) > w - 10 and unicode.wtrunc(value, w - 9) or value
     value = text.padRight(value, w - 10)
+    
+    local curBg = gpu.setBackground(lineNrBgColor)
     gpu.set(x, y + h - 1, value)
+    gpu.setBackground(curBg)
 
     currentStatus = value -- MODIFICATION
 end
@@ -520,7 +523,9 @@ local function setCursor(nbx, nby)
     term.setCursor(nbx - scrollX + currentMargin, nby - scrollY) -- MODIFICATION
     --update with term lib
     nbx, nby = getCursor()
+    local curBg = gpu.setBackground(lineNrBgColor)
     gpu.set(x + w - 10, y + h, text.padLeft(string.format("%d,%d", nby, nbx), 10))
+    gpu.setBackground(curBg)
 end
 
 local function highlight(bx, by, length, enabled)
@@ -1066,3 +1071,9 @@ resetColors()
 
 term.clear()
 term.setCursorBlink(true)
+local x, y, w, h = getArea()
+
+local curBg = gpu.setBackground(lineNrBgColor)
+gpu.fill(x, y + h - 1, w, 1, ' ')
+gpu.setBackground(curBg)
+

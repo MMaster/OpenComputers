@@ -4,9 +4,10 @@ local term = require("term")
 local gpu = component.gpu
 local gui = require("mmgui")
 local thread = require("thread")
+local stringutils = require("stringutils")
 
 local prgName = "shwrap"
-local version = "0.2" .. " (MMGUI Lib " .. gui.Version() .. ")"
+local version = "0.3" .. " (MMGUI Lib " .. gui.Version() .. ") by MMaster"
 
 local screenWidth, screenHeight = gpu.getResolution()
 
@@ -37,8 +38,8 @@ local panel
 -- cache
 local reactorValueWidth = 17
 local reactorTwoValueWidth = 7
-local reactorUpdateTime = 2.0
-local reactorUpdateWait = 2.0
+local reactorUpdateTime = 3.0
+local reactorUpdateWait = 1.0
 
 -- reactor grid controller - initialized by background service brgc (part of bigreactors script)
 local grid_controller = require("brgc/grid_controller")
@@ -50,7 +51,7 @@ function updateLblValueFloat(lbl, cur)
         return false
     end
 
-    gui.setText(panel, lbl, lpad(string.format("%.1f", cur), reactorValueWidth, ' '))
+    gui.setText(panel, lbl, stringutils.formatNumber(cur, "", reactorValueWidth, 1))
     lastValues[lbl] = cur
 end
 
@@ -96,8 +97,8 @@ local colorValueFg = 0x66D9EF
 
 function setupLabelsValue(x, y, w, h, name, unit)
     gui.newLabel(panel, x + 1, y, name, nil, colorLabelFg)
-    local lblValue = gui.newLabel(panel, x + 11, y, "", nil, colorValueFg)
-    gui.newLabel(panel, x + w - 5, y, unit, nil, colorValueFg)
+    local lblValue = gui.newLabel(panel, x + 11 + (4-#unit), y, "", nil, colorValueFg)
+    gui.newLabel(panel, x + w - #unit - 1, y, unit, nil, colorValueFg)
     return lblValue
 end
 
@@ -108,17 +109,17 @@ function setupReactors()
     reactorValueWidth = w - 6 - 11
     reactorTwoValueWidth = (reactorValueWidth - 3) // 2
 
-    lblReactorGen =        setupLabelsValue(x, y + 0, w, h, "Cur Output", "RF/t")
-    lblReactorGenMax =     setupLabelsValue(x, y + 1, w, h, "Max Output", "RF/t")
-    pbReactorOutput = gui.newProgress(panel, x + 1, y + 3, w - 2, 100.0, 0.0, nil, true)
-    lblReactorGenOpt =     setupLabelsValue(x, y + 4, w, h, "Opt Output", "RF/t")
+    lblReactorGenOpt =     setupLabelsValue(x, y + 1, w, h, "Opt Output", "RF/t")
+    lblReactorGen =        setupLabelsValue(x, y + 2, w, h, "Cur Output", "RF/t")
+    lblReactorGenMax =     setupLabelsValue(x, y + 3, w, h, "Max Output", "RF/t")
+    pbReactorOutput = gui.newProgress(panel, x + 1, y + 4, w - 2, 100.0, 0.0, nil, true)
 
     lblReactorNeed =       setupLabelsValue(x, y + 6, w, h, "Cur Need",   "RF/t")
     lblReactorNeedAvg =    setupLabelsValue(x, y + 7, w, h, "Avg Need",   "RF/t")
 
     lblReactorStored =     setupLabelsValue(x, y + 9, w, h, "Cur Stored", "RF")
     lblReactorStoredMax =  setupLabelsValue(x, y +10, w, h, "Max Stored", "RF")
-    pbReactorStored = gui.newProgress(panel, x + 1, y + 12, w - 2, 100.0, 0.0, nil, true)
+    pbReactorStored = gui.newProgress(panel, x + 1, y + 11, w - 2, 100.0, 0.0, nil, true)
 end
 
 --

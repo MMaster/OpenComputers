@@ -429,29 +429,35 @@ local function _displayProgress(guiID, progressID)
     gpu.setBackground(colorProgressForeground)
     gpu.setForeground(colorProgressBackground)
     local x = 0
-    if guiID[progressID].x == "center" then
-      x = guiID.x + math.floor((guiID.width / 2)) - math.floor((guiID[progressID].lenght) / 2)
-    else
-      x = guiID.x + guiID[progressID].x
-    end
+
     local proz = math.floor(100 / guiID[progressID].max * guiID[progressID].value)
     if proz > 100 then
       proz = 100
       if guiID[progressID].finished == false and guiID[progressID].func then
-	guiID[progressID].func(guiID, progressID)
+        guiID[progressID].func(guiID, progressID)
       end
       guiID[progressID].finished = true
     end
-    local pos = math.floor(guiID[progressID].lenght / 100 * proz)
+
+    local length = guiID[progressID].lenght
+    if guiID[progressID].displayNumber == true then
+        length = length - 4
+    end
+    if guiID[progressID].x == "center" then
+      x = guiID.x + math.floor((guiID.width / 2)) - math.floor(length / 2)
+    else
+      x = guiID.x + guiID[progressID].x
+    end
+    local pos = math.floor(length / 100 * proz)
     gpu.fill(x, guiID[progressID].y , pos, 1, " ")
     gpu.setBackground(colorProgressBackground)
     gpu.setForeground(colorProgressForeground)
-    gpu.fill(x + pos, guiID[progressID].y , guiID[progressID].lenght - pos, 1, " ")
+    gpu.fill(x + pos, guiID[progressID].y, length - pos, 1, " ")
     gpu.setBackground(guiID.bg)
     gpu.setForeground(guiID.fg)
     if guiID[progressID].displayNumber == true then
-      gpu.fill(x, guiID[progressID].y - 1, guiID[progressID].lenght, 1, " ")
-      gpu.set(x + (math.floor(guiID[progressID].lenght / 2)) - 1, guiID[progressID].y - 1, proz .. "%")
+      -- gpu.fill(x, guiID[progressID].y - 1, guiID[progressID].lenght, 1, " ")
+      gpu.set(x + guiID[progressID].lenght - #proz - 1, guiID[progressID].y, proz .. "%")
     end
   end
 end

@@ -10,6 +10,7 @@ local version = "0.2" .. " (MMGUI Lib " .. gui.Version() .. ")"
 
 local screenWidth, screenHeight = gpu.getResolution()
 
+local srep = string.rep
 -- pad the left side
 lpad =
     function (s, l, c)
@@ -36,24 +37,26 @@ local panel
 local reactorPanel
 
 -- reactor labels
-local lblReactorPowerGen
+local lblReactorGen
 
 -- cache
 local reactorValueWidth = 17
-local reactorTwoValueWidth = 6
+local reactorTwoValueWidth = 7
 local reactorUpdateTime = 2.0
 local reactorUpdateWait = 2.0
 
 -- reactor grid controller - initialized by background service brgc (part of bigreactors script)
 local grid_controller = require("brgc/grid_controller")
 
-local lastEnergyProducedReactors = -1
-function updateReactorPowerGen(cur, max)
-    if lastEnergyProducedReactors == cur then
+local lastValues = {}
+
+function updateLblValueFloat(lbl, cur)
+    if lastValues[lbl] ~= nil and lastValues[lbl] == cur then
         return false
     end
-    gui.setText(panel, lblReactorPowerGen, rpad(string.format("%.1f", cur), reactorTwoValueWidth, ' ') .. " / " .. string.format("%.1f", max))
-    lastEnergyProducedReactors = cur
+
+    gui.setText(panel, lbl, lpad(string.format("%.1f", cur), reactorValueWidth, ' '))
+    lastValues[lbl] = cur
 end
 
 function updateReactors()
@@ -62,29 +65,54 @@ function updateReactors()
     end
 
     if grid_controller.isRunning() then
-        local energyProducedReactors = grid_controller.getEnergyProductionRateReactors()
-        updateReactorPowerGen(energyProducedReactors, 0)
+		local energyStoredMax = grid_controller.getMaxEnergyStored()
+		local energyStoredCurrent = grid_controller.getEnergyStored()
+		local energyProducedReactors = grid_controller.getEnergyProductionRateReactors()
+		local energyProducedTurbines = grid_controller.getEnergyProductionRateTurbines()
+		local energyProducedTotal = grid_controller.getEnergyProductionRate()
+		local energyProductionReactorsMax = grid_controller.getEnergyProductionRateReactorsMax()
+		local energyProductionTurbinesMax = grid_controller.getEnergyProductionRateTurbinesMax()
+		local energyProductionTotalMax = energyProductionReactorsMax + energyProductionTurbinesMax
+		local energyProductionTotalOpt = grid_controller.getOptEnergyProduction()
+		local energyProductionReactorOpt = energyProductionTotalOpt - energyProductionTurbinesMax
+
+        updateLblValueFloat(lblReactorGen,      energyProducedReactors)
+        updateLblValueFloat(lblReactorGenOpt,   energyProductionReactorOpt)
+        updateLblValueFloat(lblReactorGenMax,   energyProductionReactorsMax)
+
+        updateLblValueFloat(lblReactorNeed,     grid_controller.getEnergyExtractionRate())
+        updateLblValueFloat(lblReactorNeedAvg,  grid_controller.getEnergyExtractionRateWeighted())
+
+        updateLblValueFloat(lblReactorStored,   energyStoredCurrent)
+        updateLblValueFloat(lblReactorStoredMax,energyStoredMax)
     else
-        updateReactorPowerGen(0,0)
+        updateReactorGen(0)
     end
 end
 
+function setupLabelsValue(x, y, w, h, name, unit)
+    gui.newLabel(panel, x + 1, y, name)
+    local lblValue = gui.newLabel(panel, x + 11, y, "")
+    gui.newLabel(panel, x + w - 5, y, unit)
+    return lblValue
+end
+
 function setupReactors()
-    local x, y, w, h = 2, 1, panel.width - 3, 8
+    local x, y, w, h = 2, 1, panel.width - 3, 10
     reactorPanel = gui.newFrame(panel, x - 1, y - 1, w + 2, h + 2, "Reactors")
 
-    -- line #1
-    local lineY = y + 1
-    gui.newLabel(panel, x + 1, lineY, "Generated")
+    reactorValueWidth = w - 6 - 11
+    reactorTwoValueWidth = (reactorValueWidth - 3) // 2
 
-    lblReactorPowerGen = gui.newLabel(panel, x + 10, lineY, "")
-    reactorValueWidth = w - 6 - 10 - 2
-    reactorTwoValueWidth = (reactorValueWidth - 3 - 2) / 2
+    lblReactorGen =        setupLabelsValue(x, y + 0, w, h, "Cur Output", "RF/t")
+    lblReactorGenOpt =     setupLabelsValue(x, y + 1, w, h, "Opt Output", "RF/t")
+    lblReactorGenMax =     setupLabelsValue(x, y + 2, w, h, "Max Output", "RF/t")
 
-    gui.newLabel(panel, x + w - 5, lineY, "RF/t")
+    lblReactorNeed =       setupLabelsValue(x, y + 5, w, h, "Cur Need",   "RF/t")
+    lblReactorNeedAvg =    setupLabelsValue(x, y + 6, w, h, "Avg Need",   "RF/t")
 
-    -- line #2
-    lineY = y + 2
+    lblReactorStored =     setupLabelsValue(x, y + 8, w, h, "Cur Stored", "RF")
+    lblReactorStoredMax =  setupLabelsValue(x, y + 9, w, h, "Max Stored", "RF")
 end
 
 --

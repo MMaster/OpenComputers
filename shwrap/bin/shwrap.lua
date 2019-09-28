@@ -83,6 +83,9 @@ function updateReactors()
 
         updateLblValueFloat(lblReactorStored,   energyStoredCurrent)
         updateLblValueFloat(lblReactorStoredMax,energyStoredMax)
+
+        gui.setMax(panel, pbReactorStored, energyStoredMax)
+        gui.setValue(panel, pbReactorStored, energyStoredCurrent)
     else
         updateReactorGen(0)
     end
@@ -107,14 +110,15 @@ function setupReactors()
 
     lblReactorGen =        setupLabelsValue(x, y + 0, w, h, "Cur Output", "RF/t")
     lblReactorGenMax =     setupLabelsValue(x, y + 1, w, h, "Max Output", "RF/t")
-    lblReactorGenOpt =     setupLabelsValue(x, y + 2, w, h, "Opt Output", "RF/t")
     pbReactorOutput = gui.newProgress(panel, x + 1, y + 3, w - 2, 100.0, 0.0, nil, true)
+    lblReactorGenOpt =     setupLabelsValue(x, y + 4, w, h, "Opt Output", "RF/t")
 
-    lblReactorNeed =       setupLabelsValue(x, y + 5, w, h, "Cur Need",   "RF/t")
-    lblReactorNeedAvg =    setupLabelsValue(x, y + 6, w, h, "Avg Need",   "RF/t")
+    lblReactorNeed =       setupLabelsValue(x, y + 6, w, h, "Cur Need",   "RF/t")
+    lblReactorNeedAvg =    setupLabelsValue(x, y + 7, w, h, "Avg Need",   "RF/t")
 
     lblReactorStored =     setupLabelsValue(x, y + 9, w, h, "Cur Stored", "RF")
     lblReactorStoredMax =  setupLabelsValue(x, y +10, w, h, "Max Stored", "RF")
+    pbReactorStored = gui.newProgress(panel, x + 1, y + 12, w - 2, 100.0, 0.0, nil, true)
 end
 
 --

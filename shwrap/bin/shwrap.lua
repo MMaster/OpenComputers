@@ -55,13 +55,18 @@ function setupReactors()
     local x, y, w, h = 2, 2, panel.width - 3, 8
     reactorPanel = gui.newFrame(panel, x - 1, y - 1, w + 2, h + 2, "Reactors")
 
-    gui.newLabel(panel, x + 1, y + 1, "Generated")
+    -- line #1
+    local lineY = y + 1
+    gui.newLabel(panel, x + 1, lineY, "Generated")
 
-    lblReactorPowerGen = gui.newLabel(panel, x + 10, y + 1, "")
+    lblReactorPowerGen = gui.newLabel(panel, x + 10, lineY, "")
     reactorValueWidth = w - 6 - 10 - 2
     reactorTwoValueWidth = (reactorValueWidth - 3 - 2) / 2
 
-    gui.newLabel(panel, x + w - 5, y + 2, "RF/t")
+    gui.newLabel(panel, x + w - 5, lineY, "RF/t")
+
+    -- line #2
+    lineY = y + 2
 
     reactorsUpdateTimer = event.timer(2, updateReactors, math.huge)
 end

@@ -288,7 +288,7 @@ local function _displayAFrame(guiID, frameID)
   gpu.set(guiID[frameID].x, guiID[frameID].y + guiID[frameID].height - 1 , "+")
   gpu.set(guiID[frameID].x + guiID[frameID].width - 1 , guiID[frameID].y + guiID[frameID].height - 1, "+")
   if guiID[frameID].text then
-    gpu.set(guiID[frameID].x + math.floor((guiID[frameID].width/2)) - math.floor((string.len(guiID[frameID].text)/2)+1), guiID[frameID].y, "¦" .. guiID[frameID].text .. "?")
+    gpu.set(guiID[frameID].x + math.floor((guiID[frameID].width/2)) - math.floor((string.len(guiID[frameID].text)/2)+1), guiID[frameID].y, " " .. guiID[frameID].text .. " ")
   end
 end
 

@@ -30,10 +30,8 @@ function stringutils.formatNumber(number, unit, padding, precision)
 		spacing = 2 + string.len(unit) - string.len(last_prefix)
 	end
 
-	if number_div < 10 then
-		return string.format("%" .. tostring(spacing) .. ".0" .. tostring(precision) .. "f %s%s", number_div, last_prefix, unit)
-	elseif number_div < 100 then
-		return string.format("%" .. tostring(spacing) .. ".0" .. tostring(precision-1) .. "f %s%s", number_div, last_prefix, unit)
+    if precision > 0 then
+        return string.format("%" .. tostring(spacing) .. ".0" .. tostring(precision) .. "f %s%s", number_div, last_prefix, unit)
 	else
 		return string.format("%" .. tostring(spacing) .. "d %s%s", math.floor(number_div + 0.5), last_prefix, unit)
 	end

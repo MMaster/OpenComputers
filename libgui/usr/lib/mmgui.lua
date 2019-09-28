@@ -1184,7 +1184,7 @@ function gui.processEvent(guiID, isAuthorizedFunc, e, x, y, button, player)
 --  gui.displayGui(guiID)
 end
 
-errorGui = gui.newGui("center", "center", screenWidth - 4, 10, true, "ERROR", 0xFF0000, 0xFFFF00)
+errorGui = gui.newGui("center", "center", screenWidth / 3 * 2, 10, true, "ERROR", 0xFF0000, 0xFFFF00)
 errorMsgLabel1 = gui.newLabel(errorGui, "center", 3, "")
 errorMsgLabel2 = gui.newLabel(errorGui, "center", 4, "")
 errorMsgLabel3 = gui.newLabel(errorGui, "center", 5, "")
@@ -1236,12 +1236,12 @@ local function yesNoCallbackNo()
   yesNoValue = false
 end
 
-yesNoGui = gui.newGui("center", "center", screenWidth - 6, 8, true, "Question")
+yesNoGui = gui.newGui("center", "center", screenWidth / 3 * 2, 8, true, "Question")
 yesNoMsgLabel1 = gui.newLabel(yesNoGui, "center", 2, "")
 yesNoMsgLabel2 = gui.newLabel(yesNoGui, "center", 3, "")
 yesNoMsgLabel3 = gui.newLabel(yesNoGui, "center", 4, "")
 yesNoYesButton = gui.newButton(yesNoGui, 3, 6, "yes", yesNoCallbackYes)
-yesNoNoButton = gui.newButton(yesNoGui, screenWidth - 10, 6, "no", yesNoCallbackNo)
+yesNoNoButton = gui.newButton(yesNoGui, screenWidth / 3 * 2 - 4, 6, "no", yesNoCallbackNo)
 
 
 function gui.getYesNo(msg1, msg2, msg3)

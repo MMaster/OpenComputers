@@ -82,7 +82,7 @@ gui.newList(guiID, x, y, width, height, tab, func, text)
   func will be called, if scrolling in list, or entry is selected with func(guiID, listID, selectedID, selectedText)
   needs: guiID, x, y, width, height, tab
 
-gui.newFrame(guiID, x, y, width, height, text)
+gui.newFrame(guiID, x, y, width, height, text, bg, fg)
   register a new frame to the gui
   needs: guiID, x, y, width, height
 
@@ -801,11 +801,13 @@ function gui.newList(guiID, x, y, width, height, tab, func, text)
 end
 
 --frame
-function gui.newFrame(guiID, x, y, width, height, text)
+function gui.newFrame(guiID, x, y, width, height, text, bg, fg)
   local tmpTable = {}
   tmpTable["type"] = "frame"
   tmpTable["x"] = x + guiID.x
   tmpTable["y"] = y + guiID.y
+  tmpTable["bg"] = bg or colorFrameBackground
+  tmpTable["fg"] = fg or colorFrameForeground
   tmpTable["width"] = width
   tmpTable["height"] = height
   tmpTable["visible"] = true

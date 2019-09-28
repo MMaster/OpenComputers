@@ -51,7 +51,7 @@ function updateLblValueFloat(lbl, cur)
         return false
     end
 
-    gui.setText(panel, lbl, stringutils.formatNumber(cur, "", reactorValueWidth, 1))
+    gui.setText(panel, lbl, lpad(stringutils.formatNumber(cur, "", 2), reactorValueWidth, ' '))
     lastValues[lbl] = cur
 end
 
@@ -97,7 +97,7 @@ local colorValueFg = 0x66D9EF
 
 function setupLabelsValue(x, y, w, h, name, unit)
     gui.newLabel(panel, x + 1, y, name, nil, colorLabelFg)
-    local lblValue = gui.newLabel(panel, x + 11 + (4-#unit), y, "", nil, colorValueFg)
+    local lblValue = gui.newLabel(panel, x + 12 + (4-#unit), y, "", nil, colorValueFg)
     gui.newLabel(panel, x + w - #unit - 1, y, unit, nil, colorValueFg)
     return lblValue
 end

@@ -37,8 +37,7 @@ function updateReactorPowerGen(cur)
     if lastEnergyProducedReactors == cur then
         return false
     end
-    local p = reactorPanel
-    gui.setText(p, lblReactorPowerGen, string.format("%*.1f / %*.1f", reactorTwoValueWidth, reactorTwoValueWidth, cur))
+    gui.setText(panel, lblReactorPowerGen, string.format("%*.1f / %*.1f", reactorTwoValueWidth, reactorTwoValueWidth, cur))
 end
 
 function updateReactors()
@@ -53,17 +52,16 @@ function updateReactors()
 end
 
 function setupReactors()
-    reactorPanel = gui.newFrame(panel, 1, 1, panel.width - 1, 8, "Reactors")
+    local x, y, w, h = 2, 2, panel.width - 3, 8
+    reactorPanel = gui.newFrame(panel, x - 1, y - 1, w + 2, h + 2, "Reactors")
 
-    local p = reactorPanel
+    gui.newLabel(panel, x + 1, y + 1, "Generated")
 
-    gui.newLabel(p, 2, 2, "Generated")
-
-    lblReactorPowerGen = gui.newLabel(p, 10, 2, "")
-    reactorValueWidth = p.width - 6 - 10 - 2
+    lblReactorPowerGen = gui.newLabel(panel, x + 10, y + 1, "")
+    reactorValueWidth = w - 6 - 10 - 2
     reactorTwoValueWidth = (reactorValueWidth - 3 - 2) / 2
 
-    gui.newLabel(p, p.width - 5, 2, "RF/t")
+    gui.newLabel(panel, x + w - 5, y + 2, "RF/t")
 
     reactorsUpdateTimer = event.timer(2, updateReactors, math.huge)
 end

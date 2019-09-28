@@ -419,7 +419,7 @@ local function drawLine(x, y, w, h, lineNr)
                 local bg = data[3]
                 local drawAt = i - scrollX + x
 
-                if drawAt > w - x then
+                if drawAt > w + x then
                     break
                 end
                 
@@ -1063,9 +1063,8 @@ while running do
 
         if startC ~= endC then
             drawLine(x, y, w, h, startC)
+            drawLine(x, y, w, h, endC)
         end
-
-        drawLine(x, y, w, h, endC)
 
         -- END OF MODIFICATION
     end

@@ -4,7 +4,6 @@ local term = require("term")
 local gpu = component.gpu
 local gui = require("mmgui")
 local thread = require("thread")
-local event = require("event")
 
 local prgName = "shwrap"
 local version = "0.2" .. " (MMGUI Lib " .. gui.Version() .. ")"
@@ -26,7 +25,8 @@ local lblReactorPowerGen
 -- cache
 local reactorValueWidth = 17
 local reactorTwoValueWidth = 6
-local reactorsUpdateTimer
+local reactorUpdateTime = 2.0
+local reactorUpdateWait = 2.0
 
 -- reactor grid controller - initialized by background service brgc (part of bigreactors script)
 local grid_controller = require("brgc/grid_controller")
@@ -70,14 +70,20 @@ function setupReactors()
 
     -- line #2
     lineY = y + 2
-
-    reactorsUpdateTimer = event.timer(2, updateReactors, math.huge)
 end
 
 --
 -- REACTORS END
 --
 
+-- tick every 0.1s or on event
+function guiTick()
+    reactorUpdateWait = reactorUpdateWait - 0.1
+    if reactorUpdateWait < 0 then
+        updateReactors()
+        reactorUpdateWait = reactorUpdateTime
+    end
+end
 
 -- setup main panel
 function setupPanel()
@@ -87,7 +93,6 @@ end
 function buttonExitCallback(guiID, id)
     local result = gui.getYesNo("", "Do you really want to exit?", "")
     if result == true then
-        event.cancel(reactorsUpdateTimer)
         gui.exit()
     end
     gui.displayGui(guiID)
@@ -104,6 +109,7 @@ function guiThread()
     gui.setTop(prgName .. " " .. version)
 
     while true do
+        guiTick()
         gui.runGui(panel)
     end
 end

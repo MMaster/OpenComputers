@@ -108,7 +108,7 @@ function setupReactors()
     lblReactorGen =        setupLabelsValue(x, y + 0, w, h, "Cur Output", "RF/t")
     lblReactorGenMax =     setupLabelsValue(x, y + 1, w, h, "Max Output", "RF/t")
     lblReactorGenOpt =     setupLabelsValue(x, y + 2, w, h, "Opt Output", "RF/t")
-    pbReactorOutput = gui.newProgress(panel, x + 1, y + 3, w, 100.0, 0.0, nil, 1)
+    pbReactorOutput = gui.newProgress(panel, x + 1, y + 3, w - 2, 100.0, 0.0, nil, true)
 
     lblReactorNeed =       setupLabelsValue(x, y + 5, w, h, "Cur Need",   "RF/t")
     lblReactorNeedAvg =    setupLabelsValue(x, y + 6, w, h, "Avg Need",   "RF/t")

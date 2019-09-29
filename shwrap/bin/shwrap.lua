@@ -73,7 +73,7 @@ function updateReactors()
 		local energyProductionReactorOpt = energyProductionTotalOpt - energyProductionTurbinesMax
 
 		if grid_controller.mState == 2 then
-			gui.setText(panel, lblReactorMode, "BALANCE")
+			gui.setText(panel, lblReactorMode, "BALANCE ")
 		elseif grid_controller.getChargeMode() then
 			gui.setText(panel, lblReactorMode, "CHARGING")
 		elseif grid_controller.mState == 1 then
@@ -81,7 +81,7 @@ function updateReactors()
 		elseif grid_controller.mState == 0 then
 			gui.setText(panel, lblReactorMode, "DECREASE")
 		else
-			gui.setText(panel, lblReactorMode, "UNKNOWN")
+			gui.setText(panel, lblReactorMode, "UNKNOWN ")
 		end
 
         updateLblValueFloat(lblReactorGen,      energyProducedReactors)
@@ -121,7 +121,7 @@ function setupReactors()
     reactorValueWidth = w - 6 - 11
     reactorTwoValueWidth = (reactorValueWidth - 3) // 2
 
-    lblReactorMode = gui.newLabel(panel, "center", y, "-", nil, 0xFD971F)
+    lblReactorMode = gui.newLabel(panel, x + w // 2 - 4, y, "-", nil, 0xFD971F)
     lblReactorGenOpt =     setupLabelsValue(x, y + 1, w, h, "Opt Output", "RF/t")
     lblReactorGen =        setupLabelsValue(x, y + 2, w, h, "Cur Output", "RF/t")
     lblReactorGenMax =     setupLabelsValue(x, y + 3, w, h, "Max Output", "RF/t")

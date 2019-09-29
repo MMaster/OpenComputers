@@ -72,6 +72,18 @@ function updateReactors()
 		local energyProductionTotalOpt = grid_controller.getOptEnergyProduction()
 		local energyProductionReactorOpt = energyProductionTotalOpt - energyProductionTurbinesMax
 
+		if grid_controller.mState == 2 then
+			gui.setText(panel, lblReactorMode, "BALANCE")
+		elseif grid_controller.getChargeMode() then
+			gui.setText(panel, lblReactorMode, "CHARGING")
+		elseif grid_controller.mState == 1 then
+			gui.setText(panel, lblReactorMode, "INCREASE")
+		elseif grid_controller.mState == 0 then
+			gui.setText(panel, lblReactorMode, "DECREASE")
+		else
+			gui.setText(panel, lblReactorMode, "UNKNOWN")
+		end
+
         updateLblValueFloat(lblReactorGen,      energyProducedReactors)
         updateLblValueFloat(lblReactorGenOpt,   energyProductionReactorOpt)
         updateLblValueFloat(lblReactorGenMax,   energyProductionReactorsMax)
@@ -109,6 +121,7 @@ function setupReactors()
     reactorValueWidth = w - 6 - 11
     reactorTwoValueWidth = (reactorValueWidth - 3) // 2
 
+    lblReactorMode = gui.newLabel(panel, "center", y, "-", nil, 0xFD971F)
     lblReactorGenOpt =     setupLabelsValue(x, y + 1, w, h, "Opt Output", "RF/t")
     lblReactorGen =        setupLabelsValue(x, y + 2, w, h, "Cur Output", "RF/t")
     lblReactorGenMax =     setupLabelsValue(x, y + 3, w, h, "Max Output", "RF/t")
@@ -126,8 +139,8 @@ end
 -- REACTORS END
 --
 
-local totalRefreshTime = 10
-local totalRefreshWait = 10
+local totalRefreshTime = 60.0
+local totalRefreshWait = 60.0
 -- tick every 0.1s or on event
 function guiTick()
     reactorUpdateWait = reactorUpdateWait - 0.1
@@ -157,6 +170,14 @@ end
 
 -- run thread loop
 function guiThread()
+    os.sleep(1)
+
+    -- set terminal window to dedicated screen space
+    term.window.width = screenWidth - 37
+    term.window.height = screenHeight - 2
+    term.window.dx = 0
+    term.window.dy = 1
+
     while true do
         guiTick()
         gui.runGui(panel)
@@ -183,4 +204,4 @@ term.window.dx = 0
 term.window.dy = 1
 
 -- we are done return to shell
-
+term.setCursor(1,1)

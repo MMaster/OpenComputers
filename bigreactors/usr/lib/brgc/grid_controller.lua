@@ -328,7 +328,7 @@ function grid_controller.runOnce()
 
 	if energyDemandWeighted > grid_controller.getOptEnergyProduction() then
 		if grid_controller.mEnergyStoredTarget == nil then
-			grid_controller.mEnergyStoredTarget = grid_controller.getEnergyStored()
+			grid_controller.mEnergyStoredTarget = grid_controller.getMaxEnergyStored() * 0.3
 		end
 		grid_controller.mState = controllerState.LOAD
 		-- We have to put some reactors into overdrive

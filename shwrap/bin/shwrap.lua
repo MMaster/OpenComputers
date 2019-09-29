@@ -126,12 +126,19 @@ end
 -- REACTORS END
 --
 
+local totalRefreshTime = 10
+local totalRefreshWait = 10
 -- tick every 0.1s or on event
 function guiTick()
     reactorUpdateWait = reactorUpdateWait - 0.1
     if reactorUpdateWait < 0 then
         updateReactors()
         reactorUpdateWait = reactorUpdateTime
+    end
+    totalRefreshWait = totalRefreshWait - 0.1
+    if totalRefreshWait < 0 then
+        gui.displayGui(panel)
+        totalRefreshWait = totalRefreshTime
     end
 end
 
